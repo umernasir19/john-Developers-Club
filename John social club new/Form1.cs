@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using John_social_club_new.Properties;
+using John_Social_Club_Data.Data_Model;
+using John_Social_Club_Data.DataLayer;
 
 namespace John_social_club_new
 {
@@ -19,7 +21,10 @@ namespace John_social_club_new
         {
             InitializeComponent();
         }
-        private void InitializeResourceString()
+      
+          private  ClubMemberAccess clubmemberaccess=new ClubMemberAccess();     
+  
+           private void InitializeResourceString()
         {
             lblName.Text = Resource.lblName;
             lblDateOfBirth.Text = Resource.lblDob;
@@ -56,7 +61,6 @@ namespace John_social_club_new
             }
             else
             {
-                
                 return true;
             }
         }
@@ -73,12 +77,29 @@ namespace John_social_club_new
             try {
                 if (this.Validation())
                 {
-                    MessageBox.Show("Passed");
-                }
-                else
-                {
-                    
-                  
+                    ClubMemberModel clubmember = new ClubMemberModel()
+                    {
+                        Id = 0,
+                        Name = txtName.Text.Trim(),
+                        DateOfBirth = dtdateTimePicker1.Value,
+                        Occupation = (Occupation)cmbOccupation.SelectedValue,
+                        Healthstatus = (Health)cmbHealth.SelectedValue,
+                        MaritialStatus = (MaritialStatus)cmbMaritialStatus.SelectedValue,
+                        NumberOfchildren = txtnoOofChildren.Text.Trim() == string.Empty ? 0 : Convert.ToInt16(txtnoOofChildren.Text),
+                        Salary = txtSalary.Text.Trim() == string.Empty ? 0 : Convert.ToInt32(txtSalary.Text)
+                    };
+
+                    var Succes = this.clubmemberaccess.AddMember(clubmember);
+                    if (Succes != "0")
+                    {
+                        MessageBox.Show("Ädded");
+                        this.ResetAll();
+                    }
+                    else
+                    {
+                        MessageBox.Show(Succes);
+                    }
+                 
                 }
 
             }
